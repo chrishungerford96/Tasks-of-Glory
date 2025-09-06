@@ -10,6 +10,8 @@ class TaskManager:
         self.root.geometry("900x600")
         self.tasks = []
         self.selected_column = None
+        self.dragging = False
+        self.drag_data = None
 
         self.root.configure(bg="#FFFACD")  # LemonChiffon yellow
 
@@ -21,6 +23,7 @@ class TaskManager:
         self.frame.pack(pady=10, fill="x")
         self.task_input = tk.Entry(self.frame, width=35, font=("Segoe UI", 12))
         self.task_input.pack(side=tk.LEFT, padx=10, pady=5, fill="x", expand=True)
+        self.task_input.bind('<Return>', lambda event: self.add_task())
         tk.Button(self.frame, text="Add Task", font=("Segoe UI", 12), bg="#FFD700", fg="#333", relief="raised", command=self.add_task).pack(side=tk.LEFT, padx=10)
 
         # Criteria header (grid)
