@@ -356,6 +356,16 @@ class TaskManager:
 
 # Run the app
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = TaskManager(root)
-    root.mainloop()
+    print("Starting Tasks of Glory...")
+    try:
+        root = tk.Tk()
+        print("Tk root created")
+        app = TaskManager(root)
+        print("TaskManager initialized")
+        print("Starting mainloop...")
+        root.mainloop()
+        print("Mainloop ended")
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        import traceback
+        traceback.print_exc()
