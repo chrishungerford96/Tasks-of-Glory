@@ -1,14 +1,33 @@
-# Tasks of Glory
+Tasks of Glory
 
-A lightweight Tkinter task manager that helps you choose what to do next by balancing **Ease** (how quick/simple) against **Urgency** (how time-sensitive). 
-Drag to rank Ease or Urgency, and let the app compute a **Priority** score (`ease ÷ urgency`) so high-urgency items bubble up without ignoring easy wins.
+A lightweight Tkinter task manager that helps procrastinators stay productive by balancing quick wins against urgent deadlines.
 
-## Features
-- Add, check off, and double-click to edit tasks  
-- Rank by **Ease** or **Urgency** (drag handle shows for the active column)  
-- Auto-computed **Priority**; one-click “Sort by Priority”  
-- Persisted to `tasks.txt` in the app folder
+Tasks are ranked by Ease (how simple/fast) and Urgency (how time-sensitive). The app computes a Priority score so high-urgency tasks bubble up—without ignoring the value of easy wins.
 
-## Quick start
-```bash
+Features
+
+✅ Add, complete, and edit tasks
+
+🔀 Drag-to-rank by Ease or Urgency (handle shows for active column)
+
+⚖️ Auto-computed Priority; one-click “Sort by Priority”
+
+💾 Tasks persist to tasks.txt in the app folder
+
+Quick Start
+# Clone and run
+git clone https://github.com/yourusername/Tasks-of-Glory.git
+cd Tasks-of-Glory
 python Tasks.of.Glory.py
+
+
+Or run the pre-built executable (Windows):
+TasksOfGlory.exe
+
+Planned Features
+
+Export/import task lists
+
+Dark mode
+
+Deadline reminders
