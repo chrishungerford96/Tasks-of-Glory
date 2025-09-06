@@ -14,20 +14,3 @@ Tasks are ranked by Ease (how simple/fast) and Urgency (how time-sensitive). The
 
 💾 Tasks persist to tasks.txt in the app folder
 
-**Quick Start**
-# Clone and run
-git clone https://github.com/yourusername/Tasks-of-Glory.git
-cd Tasks-of-Glory
-python Tasks.of.Glory.py
-
-
-Or run the pre-built executable (Windows):
-TasksOfGlory.exe
-
-Planned Features
-
-Export/import task lists
-
-Dark mode
-
-Deadline reminders
