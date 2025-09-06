@@ -75,6 +75,7 @@ class TaskManager:
         # Task checkbox (column 0)
         cb = tk.Checkbutton(self.tasks_frame, text=task_text, variable=var, anchor='w', width=30)
         cb.var = var
+        cb.bind('<Double-1>', lambda event, idx=row: self.edit_task(idx))
         cb.grid(row=row, column=0, sticky="w")
         widgets['cb'] = cb
 
@@ -124,6 +125,10 @@ class TaskManager:
                 if widget:
                     widget.grid_forget()
         for row, widgets in enumerate(self.tasks):
+            # Update the double-click binding with the current row index
+            widgets['cb'].unbind('<Double-1>')
+            widgets['cb'].bind('<Double-1>', lambda event, idx=row: self.edit_task(idx))
+            
             widgets['cb'].grid(row=row, column=0, sticky="ew")
             widgets['priority_label'].grid(row=row, column=1, padx=2, sticky="ew")
             widgets['ease_label'].grid(row=row, column=2, padx=2, sticky="ew")
@@ -155,6 +160,58 @@ class TaskManager:
             self.update_task_grid()
             self._reassign_ranks(criterion)
 
+    def edit_task(self, task_idx):
+        """Edit the text of a task"""
+        if task_idx >= len(self.tasks):
+            return
+        
+        widgets = self.tasks[task_idx]
+        current_text = widgets['cb'].cget('text')
+        
+        # Create a simple dialog for editing
+        edit_window = tk.Toplevel(self.root)
+        edit_window.title("Edit Task")
+        edit_window.geometry("400x150")
+        edit_window.configure(bg="#FFFACD")
+        edit_window.transient(self.root)
+        edit_window.grab_set()
+        
+        # Center the window
+        edit_window.geometry("+%d+%d" % (self.root.winfo_rootx() + 50, self.root.winfo_rooty() + 50))
+        
+        tk.Label(edit_window, text="Edit Task:", font=("Segoe UI", 12), bg="#FFFACD").pack(pady=10)
+        
+        # Entry for editing
+        edit_entry = tk.Entry(edit_window, width=50, font=("Segoe UI", 12))
+        edit_entry.pack(pady=10, padx=20, fill='x')
+        edit_entry.insert(0, current_text)
+        edit_entry.select_range(0, tk.END)
+        edit_entry.focus()
+        
+        # Buttons frame
+        btn_frame = tk.Frame(edit_window, bg="#FFFACD")
+        btn_frame.pack(pady=10)
+        
+        def save_edit():
+            new_text = edit_entry.get().strip()
+            if new_text:
+                widgets['cb'].config(text=new_text)
+                edit_window.destroy()
+            else:
+                messagebox.showwarning("Input Error", "Task text cannot be empty.")
+        
+        def cancel_edit():
+            edit_window.destroy()
+        
+        # Bind Enter key to save
+        edit_entry.bind('<Return>', lambda event: save_edit())
+        edit_window.bind('<Escape>', lambda event: cancel_edit())
+        
+        tk.Button(btn_frame, text="Save", command=save_edit, 
+                 bg="#FFD700", fg="#333", font=("Segoe UI", 10), width=10).pack(side=tk.LEFT, padx=5)
+        tk.Button(btn_frame, text="Cancel", command=cancel_edit, 
+                 bg="#FFA500", fg="#333", font=("Segoe UI", 10), width=10).pack(side=tk.LEFT, padx=5)
+
     def remove_completed(self):
         for widgets in self.tasks[:]:
             if widgets['cb'].var.get():
@@ -163,7 +220,36 @@ class TaskManager:
                     if hasattr(widget, "destroy"):
                         widget.destroy()
                 self.tasks.remove(widgets)
+        
+        # Reassign ease and urgency rankings after removal
+        self._reassign_all_ranks()
         self.update_task_grid()
+
+    def _reassign_all_ranks(self):
+        """Reassign both ease and urgency rankings to remove gaps"""
+        n = len(self.tasks)
+        
+        # Sort tasks by current ease ranking to maintain relative order
+        ease_sorted_tasks = sorted(enumerate(self.tasks), key=lambda x: x[1]['ease_var'].get())
+        
+        # Reassign ease rankings (1 to n)
+        for new_ease_rank, (original_idx, widgets) in enumerate(ease_sorted_tasks, start=1):
+            widgets['ease_var'].set(new_ease_rank)
+            widgets['ease_label'].config(text=str(new_ease_rank))
+        
+        # Sort tasks by current urgency ranking to maintain relative order
+        urgency_sorted_tasks = sorted(enumerate(self.tasks), key=lambda x: x[1]['urgency_var'].get(), reverse=True)
+        
+        # Reassign urgency rankings (n to 1, where n is highest urgency)
+        for new_urgency_rank, (original_idx, widgets) in enumerate(urgency_sorted_tasks, start=1):
+            widgets['urgency_var'].set(new_urgency_rank)
+            widgets['urgency_label'].config(text=str(new_urgency_rank))
+        
+        # Update priority values for all tasks
+        for widgets in self.tasks:
+            ease_val = widgets['ease_var'].get()
+            urgency_val = widgets['urgency_var'].get()
+            widgets['priority_label'].config(text=self.calc_priority(ease_val, urgency_val))
 
     def _reassign_ranks(self, criterion):
         n = len(self.tasks)
