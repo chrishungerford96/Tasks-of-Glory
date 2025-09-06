@@ -1,10 +1,10 @@
-Tasks of Glory
+**Tasks of Glory**
 
 A lightweight Tkinter task manager that helps procrastinators stay productive by balancing quick wins against urgent deadlines.
 
 Tasks are ranked by Ease (how simple/fast) and Urgency (how time-sensitive). The app computes a Priority score so high-urgency tasks bubble up—without ignoring the value of easy wins.
 
-Features
+**Features**
 
 ✅ Add, complete, and edit tasks
 
@@ -14,7 +14,7 @@ Features
 
 💾 Tasks persist to tasks.txt in the app folder
 
-Quick Start
+**Quick Start**
 # Clone and run
 git clone https://github.com/yourusername/Tasks-of-Glory.git
 cd Tasks-of-Glory
