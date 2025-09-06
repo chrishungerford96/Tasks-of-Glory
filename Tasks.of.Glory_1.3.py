@@ -241,7 +241,8 @@ class TaskManager:
         urgency_sorted_tasks = sorted(enumerate(self.tasks), key=lambda x: x[1]['urgency_var'].get(), reverse=True)
         
         # Reassign urgency rankings (n to 1, where n is highest urgency)
-        for new_urgency_rank, (original_idx, widgets) in enumerate(urgency_sorted_tasks, start=1):
+        for rank_position, (original_idx, widgets) in enumerate(urgency_sorted_tasks):
+            new_urgency_rank = n - rank_position  # Most urgent gets n, least urgent gets 1
             widgets['urgency_var'].set(new_urgency_rank)
             widgets['urgency_label'].config(text=str(new_urgency_rank))
         
